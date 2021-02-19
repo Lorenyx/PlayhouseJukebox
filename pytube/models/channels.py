@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional, Dict
 
-from .items import Localized, Snippet, Status, Content
+from .items import Localized, Snippet, Status, Content, Base
 
  
 @dataclass
@@ -28,7 +28,7 @@ class ChannelsBranding():
 
 
 @dataclass
-class Channels():
+class Channels(Base):
     snippet: Optional[ChannelsSnippet] = field(default=None, repr=False)
     content: Optional[ChannelsContent] = field(default=None, repr=False)
     statistics: Optional[ChannelsStatistics] = field(default=None, repr=False)
@@ -36,6 +36,6 @@ class Channels():
     status: Optional[Status] = field(default=None, repr=False)
     branding: Optional[ChannelsBranding] = field(default=None, repr=False)
     localized: Optional[Localized] = field(default=None, repr=False)
-
+    
     def __str__(self):
-        return f"Channel(title={self.snippet.title}, channelId={self.snippet.channelId}""
+        return f"Channel(title={self.snippet.title}, channelId={self.snippet.channelId}"

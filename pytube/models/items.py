@@ -3,6 +3,16 @@ from typing import Optional, Dict
 
 
 @dataclass
+class Base():
+    ...
+
+    @classmethod
+    def from_json(cls, data: dict):
+        data = {k:v for k,v in data.items() if k in cls.__dataclass_fields__.keys()}
+        return cls(**data)
+
+        
+@dataclass
 class Content():
     videoId: Optional[str] = field(default=None, repr=False)
     note: Optional[str] = field(default=None, repr=False)

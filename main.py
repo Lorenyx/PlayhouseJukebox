@@ -2,6 +2,7 @@ import os
 from pytube.models.items import Snippet
 from dotenv import load_dotenv
 
+from pytube.models.channels import Channels
 from pytube import api
 
 load_dotenv()
@@ -17,9 +18,10 @@ def main():
 
     response = request.execute()
     data = response['items'][0]
-    from pytube.models.channels import Channels
-    channel = Channels(snippet=data['snippet'], content=data['contentDetails'], statistics=data['statistics'])
-    print(channel.snippet)
+    
+    channel = Channels.from_json(response)
+    print(channel)
+    
 
 if __name__ == "__main__":
     main()
