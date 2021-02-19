@@ -15,8 +15,7 @@ def main():
     request = youtube.list_channel(id='UC_x5XG1OV2P6uZZ5FSM9Ttw')
 
     response = request.execute()
-
-    print(response)
+    print(response['items'][0].keys())
 
 if __name__ == "__main__":
     main()
