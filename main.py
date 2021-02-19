@@ -15,9 +15,9 @@ def main():
     request = youtube.list_channel(id='UC_x5XG1OV2P6uZZ5FSM9Ttw')
 
     response = request.execute()
-    snippet = response['items'][0]['snippet']
+    data = response['items'][0]['snippet']
     from pytube.models.channels import Channels
-    print()
+    print(data)
 
 if __name__ == "__main__":
     main()

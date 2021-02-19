@@ -28,6 +28,3 @@ class Localized():
 @dataclass
 class Status():
     privacyStatus: Optional[str] = field(default=None, repr=False)
-
-@dataclass
-class 
