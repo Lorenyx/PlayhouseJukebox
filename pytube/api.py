@@ -47,16 +47,16 @@ class API:
     ):
         if id:
             return self.token.channels().list(
-                part="snipper,contentDetails,statistics",
+                part="snippet,contentDetails,statistics",
                 id=id,
             )
         if forUsername:
             return self.token.channels().list(
-                part="snipper,contentDetails,statistics",
+                part="snippet,contentDetails,statistics",
                 forUsername=forUsername,
             )
         if mine:
             return self.token.channels().list(
-                    part="snipper,contentDetails,statistics",
+                    part="snippet,contentDetails,statistics",
                     mine=mine,
                 )
