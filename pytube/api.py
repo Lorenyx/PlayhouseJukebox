@@ -39,12 +39,12 @@ class API:
             self.api_service_name, self.api_version, credentials=credentials)
 
 
-    def list_channel(
-        self, *, 
+    def list_channel( self, *, 
         id:Optional[str] = None,
         forUsername:Optional[str] = None,
-        mine:Optional[bool] = None
-    ):
+        mine:Optional[bool] = None ):
+        "Returns Resoure of channel by provided criteria"
+
         if id:
             return self.token.channels().list(
                 part="snippet,contentDetails,statistics",
@@ -60,3 +60,7 @@ class API:
                     part="snippet,contentDetails,statistics",
                     mine=mine,
                 )
+
+    def list_playlist( self, *, 
+        channelId=Optional[str] = None,
+        )
