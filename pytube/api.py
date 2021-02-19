@@ -61,6 +61,8 @@ class API:
                     mine=mine,
                 )
 
-    def list_playlist( self, *, 
-        channelId=Optional[str] = None,
-        )
+    def create_playlist( self, *, 
+        title:Optional[str] = None,
+        description:Optional[str] = None,
+        status:Optional[str] = None, ):
+        "Creates the playlist provided under the logged-in account"
