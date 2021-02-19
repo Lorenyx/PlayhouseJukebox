@@ -1,4 +1,5 @@
 import os
+from pytube.models.items import Snippet
 from dotenv import load_dotenv
 
 from pytube import api
@@ -15,9 +16,10 @@ def main():
     request = youtube.list_channel(id='UC_x5XG1OV2P6uZZ5FSM9Ttw')
 
     response = request.execute()
-    data = response['items'][0]['snippet']
+    data = response['items'][0]
     from pytube.models.channels import Channels
-    print(data)
+    channel = Channels(snippet=data['snippet'], content=data['contentDetails'], statistics=data['statistics'])
+    print(channel.snippet)
 
 if __name__ == "__main__":
     main()
