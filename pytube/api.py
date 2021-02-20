@@ -37,15 +37,19 @@ class API:
         secrets_file, self.scopes)
         credentials = flow.run_console()
         self.token = googleapiclient.discovery.build(
-            self.API_SERVICE_NAME, self.API_VERSION, credentials=credentials)
+            API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
 
-    def find_channel( self, *, 
+
+    def query_channel(self, *, 
         id: str = None,
         forUsername: str = None,
         mine: bool = None,
-        part: str = "snippet,contentDetails,statistics"):
-        "Returns first Channel matching criteria"
+        part: str = "snippet,contentDetails,statistics") -> List:
+        "Returns list of Channels that matches args"
+
+        COST = 1 # Cost to make channel list request
+        self.quota -= COST
 
         if mine:
             request = self.token.channels().list(
@@ -64,8 +68,24 @@ class API:
             )
 
         response = request.execute()
-        if response:
-            return Channels.from_response(response['items'][0])
+        return response['items']
+
+
+    def find_channel( self, *, 
+        id: str = None,
+        forUsername: str = None,
+        mine: bool = None,
+        part: str = "snippet,contentDetails,statistics"):
+        "Returns first Channel that matches args"
+
+        items = self.query_channel(
+            id=id, 
+            forUsername=forUsername,
+            mine=mine,
+            part=part
+        )
+        if items:
+            return Channels.from_response(items[0])
 
 
     def create_playlist( self, *, 
