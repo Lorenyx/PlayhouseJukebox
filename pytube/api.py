@@ -3,19 +3,20 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 from dataclasses import InitVar, dataclass
-from typing import Optional, Union, List
+from typing import ClassVar, Optional, Union, List
 
-from .utils import constants 
+from .utils.constants import API_SERVICE_NAME, API_VERSION, DEFAULT_QUOTA
+from .models.channels import Channels
 
 @dataclass
 class API:
     "Main instance of the API class"
+
     secrets_file: InitVar[str] = None
     api_key: InitVar[str] = None
     token: Optional[str] = None
-    api_service_name = constants.API_SERVICE_NAME
-    api_version = constants.API_VERSION
-    DEFAULT_QUOTA = 10000
+    quota: Optional[int] = DEFAULT_QUOTA
+    
     scopes = [
         "https://www.googleapis.com/auth/youtube.readonly",
         "https://www.googleapis.com/auth/userinfo.profile",
@@ -27,7 +28,7 @@ class API:
             self.oauth_logon(secrets_file)
         elif api_key:
             self.token = googleapiclient.discovery.build(
-            self.api_service_name, self.api_version, developerKey=api_key)
+            API_SERVICE_NAME, API_VERSION, developerKey=api_key)
         
 
     def oauth_logon(self, secrets_file):
@@ -36,30 +37,36 @@ class API:
         secrets_file, self.scopes)
         credentials = flow.run_console()
         self.token = googleapiclient.discovery.build(
-            self.api_service_name, self.api_version, credentials=credentials)
+            self.API_SERVICE_NAME, self.API_VERSION, credentials=credentials)
 
 
-    def list_channel( self, *, 
-        id:Optional[str] = None,
-        forUsername:Optional[str] = None,
-        mine:Optional[bool] = None ):
-        "Returns Resoure of channel by provided criteria"
+    def find_channel( self, *, 
+        id: str = None,
+        forUsername: str = None,
+        mine: bool = None,
+        part: str = "snippet,contentDetails,statistics"):
+        "Returns first Channel matching criteria"
 
-        if id:
-            return self.token.channels().list(
-                part="snippet,contentDetails,statistics",
+        if mine:
+            request = self.token.channels().list(
+                    part=part,
+                    mine=mine,
+            )
+        elif id:
+            request = self.token.channels().list(
+                part=part,
                 id=id,
             )
-        if forUsername:
-            return self.token.channels().list(
-                part="snippet,contentDetails,statistics",
+        elif forUsername:
+            request = self.token.channels().list(
+                part=part,
                 forUsername=forUsername,
             )
-        if mine:
-            return self.token.channels().list(
-                    part="snippet,contentDetails,statistics",
-                    mine=mine,
-                )
+
+        response = request.execute()
+        if response:
+            return Channels.from_response(response['items'][0])
+
 
     def create_playlist( self, *, 
         title:Optional[str] = None,

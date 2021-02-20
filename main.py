@@ -13,13 +13,13 @@ def main():
     _secrets_file = os.getenv('SECRETS_FILE')
     youtube = api.API(api_key=_api_key)
     
-    request = youtube.list_channel(id='UC_x5XG1OV2P6uZZ5FSM9Ttw')
+    # request = youtube.list_channel(id='UC_x5XG1OV2P6uZZ5FSM9Ttw')
 
-    response = request.execute()
-    data = response['items'][0]
-    channel = Channels.from_response(data)
+    # response = request.execute()
+    # data = response['items'][0]
+    # channel = Channels.from_response(data)
     
-    print(channel)
+    print(youtube.find_channel(id='UC_x5XG1OV2P6uZZ5FSM9Ttw'))
     
 
 if __name__ == "__main__":
