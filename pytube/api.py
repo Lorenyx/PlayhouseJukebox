@@ -3,7 +3,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 from dataclasses import InitVar, dataclass
-from typing import ClassVar, Optional, Union, List
+from typing import ClassVar, Optional, Tuple, Union, List, Dict
 
 from .utils.constants import API_SERVICE_NAME, API_VERSION, DEFAULT_QUOTA
 from .models.channels import Channels
@@ -43,7 +43,7 @@ class API:
     def list_channel(self, *, 
         id: str = None,
         forUsername: str = None,
-        mine: bool = None,
+        mine: bool = False,
         part: str = "snippet,contentDetails,statistics" ) -> List:
         "Returns list of Channels that matches args"
 
@@ -67,17 +67,18 @@ class API:
             )
 
         response = request.execute()
-        return response['items']
+        if 'items' in response:
+            return response['items']
 
 
     def find_channel( self, *, 
         id: str = None,
         forUsername: str = None,
-        mine: bool = None,
-        part: str = "snippet,contentDetails,statistics"):
+        mine: bool = False,
+        part: str = "snippet,contentDetails,statistics") -> Channels:
         "Returns first Channel that matches args"
 
-        items = self.query_channel(
+        items = self.list_channel(
             id=id, 
             forUsername=forUsername,
             mine=mine,
@@ -85,6 +86,36 @@ class API:
         )
         if items:
             return Channels.from_response(items[0])
+
+    
+    def list_playlists( self, *,
+        id: str = None,
+        mine: bool = None,
+        part: str = "snippet,contentDetails",
+        maxResults: int = 25,
+        pageToken: str = None) -> Tuple:
+        "Returns tuple of ( list(items), [nextPageToken, [prevPageToken]] ) of playlist that matches args"
+        
+        COST = 1
+        self.quota -= COST
+
+        if mine:
+            request = self.token.playlists().list(
+                    part=part,
+                    maxResults=maxResults,
+                    mine=mine,
+                    pageToken=pageToken
+            )
+        elif id:
+            request = self.token.playlists().list(
+                    part=part,
+                    maxResults=maxResults,
+                    id=id,
+                    pageToken=pageToken
+            )
+        response = request.execute()
+        return response
+        return (response['items'], response['nextPageToken'], response['prevPageToken'])
 
 
     def create_playlist( self, *, 
