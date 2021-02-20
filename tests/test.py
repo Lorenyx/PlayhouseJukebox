@@ -1,11 +1,16 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+import dataclasses as ds
 
 @dataclass
 class Parent():
+    __slots__ = ['key1',]
     key1: int
 
     def fun(self):
         return 'I am'
+
 
 @dataclass
 class Child(Parent):
@@ -17,4 +22,5 @@ class Child(Parent):
 
 p = Parent(11)
 c = Child(12, 45)
-print(c.fun())
+
+print(c.__dir__())

@@ -20,7 +20,7 @@ def main():
     data = response['items'][0]
     channel = Channels.from_response(data)
     
-    print(type(channel.snippet))
+    print(channel)
     
 
 if __name__ == "__main__":
