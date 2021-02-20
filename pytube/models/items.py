@@ -1,6 +1,7 @@
 import dataclasses as ds
 
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
