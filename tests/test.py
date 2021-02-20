@@ -1,11 +1,20 @@
 from dataclasses import dataclass
 
 @dataclass
-class Obj():
-    key1: int = None
-    key2: int = None
+class Parent():
+    key1: int
 
-data = {'key1': 12, 'key2': 45}
+    def fun(self):
+        return 'I am'
 
-obj = Obj(**data)
-print(obj)
+@dataclass
+class Child(Parent):
+    key1: int
+    key2: int
+
+    def fun(self):
+        print(super().fun() + ' iron man.')
+
+p = Parent(11)
+c = Child(12, 45)
+print(c.fun())

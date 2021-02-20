@@ -44,7 +44,7 @@ class Snippet(Base):
     title: Optional[str] = field(default=None, repr=False)
     description: Optional[str] = field(default=None, repr=False)
     thumbnails: Optional[str] = field(default=None, repr=False)
-    localized: Optional[Localized] = field(default=None, repr=False)
+    localized: Optional[Localized] = field(default=None, repr=False) 
 
     def __str__(self):
         return f'Snippet(title="{self.title}, channelId="{self.channelId}")'
