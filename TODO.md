@@ -2,10 +2,11 @@
 
 ## Current tasks
 
-1. Create object from response (Channel class, specifically)
+- ~~Create object from response (Channel class, specifically)~~
+- Create update method for channel
 
 ## Future tasks
 
-1. Allow Statistics.subscriberCount to be larger than int (2^64)
-2. Create variables.json for portability
-3. Added maxResults and pageTokens to query_channel()
+- Allow Statistics.subscriberCount to be larger than int (2^64)
+- Create variables.json for portability
+- Added maxResults and pageTokens to query_channel()
