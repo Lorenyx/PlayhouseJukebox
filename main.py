@@ -18,8 +18,7 @@ def main():
     # response = request.execute()
     # data = response['items'][0]
     # channel = Channels.from_response(data)
-    print(youtube.find_channel(forUsername='Lorenyx Gaming'))
-    print(youtube.list_playlists(id='NatGeo'))
+    print(youtube.list_channel(id='UCdDGfjx2z7CcK8_QY743uJQ')[0])
     
 
 if __name__ == "__main__":

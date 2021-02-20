@@ -5,7 +5,7 @@ import googleapiclient.errors
 from dataclasses import InitVar, dataclass
 from typing import ClassVar, Optional, Tuple, Union, List, Dict
 
-from .utils.constants import API_SERVICE_NAME, API_VERSION, DEFAULT_QUOTA
+from .utils.constants import API_SERVICE_NAME, API_VERSION, DEFAULT_QUOTA, COSTS
 from .models.channels import Channels
 
 @dataclass
@@ -18,7 +18,7 @@ class API:
     quota: Optional[int] = DEFAULT_QUOTA
     
     scopes = [
-        "https://www.googleapis.com/auth/youtube.readonly",
+        "https://www.googleapis.com/auth/youtube",
         "https://www.googleapis.com/auth/userinfo.profile",
     ]
 
@@ -47,23 +47,15 @@ class API:
         part: str = "snippet,contentDetails,statistics" ) -> List:
         "Returns list of Channels that matches args"
 
-        COST = 1 # Cost to make channel list request
-        self.quota -= COST
+        self.quota -= COSTS['channel']['list']
 
         if mine:
+            request = self.token.channels().list(part=part, mine=mine)
+        else:
             request = self.token.channels().list(
                     part=part,
-                    mine=mine,
-            )
-        elif id:
-            request = self.token.channels().list(
-                part=part,
-                id=id,
-            )
-        elif forUsername:
-            request = self.token.channels().list(
-                part=part,
-                forUsername=forUsername,
+                    id=id,
+                    forUsername=forUsername,
             )
 
         response = request.execute()
@@ -88,12 +80,11 @@ class API:
             return Channels.from_response(items[0])
 
     
-    def list_playlists( self, *,
-        id: str = None,
+    def list_playlists( self,  channelId: str, *,
         mine: bool = None,
         part: str = "snippet,contentDetails",
         maxResults: int = 25,
-        pageToken: str = None) -> Tuple:
+        pageToken: str = None) -> Dict:
         "Returns tuple of ( list(items), [nextPageToken, [prevPageToken]] ) of playlist that matches args"
         
         COST = 1
@@ -110,16 +101,59 @@ class API:
             request = self.token.playlists().list(
                     part=part,
                     maxResults=maxResults,
-                    id=id,
+                    channelId=channelId,
                     pageToken=pageToken
             )
         response = request.execute()
+        return {k:v for k,v in response.items() if k in ['items', 'nextPageToken', 'prevPageToken']}
+
+
+    def insert_playlist( self, 
+        playlistId:Optional[str], 
+        videoId:Optional[str], 
+        *, position:Optional[int] = 0):
+        "Adds a Video to the specified Playlist"
+
+        self.quota -= COSTS['playlist']['insert']
+
+        request = self.token.playlistItems().insert(
+            part = "snippet",
+            body = {
+                "snippet": {
+                    "playlistId": playlistId,
+                    "position": position,
+                    "resourceId": {
+                        "kind": "youtube#video",
+                        "videoId": videoId
+                    }
+                }
+            }
+        )
+        response = request.execute()
         return response
-        return (response['items'], response['nextPageToken'], response['prevPageToken'])
 
+    def create_playlist(self, title: str, *,
+        description: str = 'This is a playlist of songs posted in a Discord channel.',
+        tags: List = None,
+        status: str = 'public'):
+        "Creates a playlist, privacy defaults to public"
 
-    def create_playlist( self, *, 
-        title:Optional[str] = None,
-        description:Optional[str] = None,
-        status:Optional[str] = None, ):
-        "Creates the playlist provided under the logged-in account"
+        self.quota -= COSTS['playlists']['insert']
+
+        request = self.token.playlists().insert(
+            part="snippet,status",
+            body={
+                "snippet": {
+                    "title": title,
+                    "description": description,
+                    "tags": tags,
+                    "defaultLanguage": "en"
+                },
+                "status": {
+                    "privacyStatus": status
+                }
+            }
+        )
+
+        response = request.execute()
+        return response
