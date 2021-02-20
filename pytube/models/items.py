@@ -1,14 +1,22 @@
-from dataclasses import dataclass, field
-from typing import Optional, Dict
+from dataclasses import InitVar, dataclass, field
+from typing import List, Optional, Dict
+
+import dataclasses as ds
 
 
 @dataclass
 class Base():
-    ...
+    ... 
+
+    @classmethod
+    def field_names(cls) -> List:
+        "Returns a list of the field names"
+        return [f.name for f in ds.fields(cls)]
 
     @classmethod
     def from_response(cls, data: dict):
-        data = {k:v for k,v in data.items() if k in cls.__dataclass_fields__.keys()}
+        "Returns a cls object made from the data provided"
+        data = {k:v for k,v in data.items() if k in cls.field_names()}
         return cls(**data)
 
         
