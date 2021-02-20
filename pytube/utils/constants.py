@@ -7,13 +7,8 @@ API_VERSION = "v3"
 DEFAULT_QUOTA = 10000
 
 COSTS = {
-    'playlists': {
         'list':1,
         'insert':50,
-    },
-    'channel': {
-        'list': 1,
-    }
 }
 
 CHANNEL_RESOURCE_PROPERTIES = {

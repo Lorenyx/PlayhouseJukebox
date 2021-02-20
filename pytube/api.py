@@ -47,7 +47,7 @@ class API:
         part: str = "snippet,contentDetails,statistics" ) -> List:
         "Returns list of Channels that matches args"
 
-        self.quota -= COSTS['channel']['list']
+        self.quota -= COSTS['list']
 
         if mine:
             request = self.token.channels().list(part=part, mine=mine)
@@ -86,9 +86,7 @@ class API:
         maxResults: int = 25,
         pageToken: str = None) -> Dict:
         "Returns tuple of ( list(items), [nextPageToken, [prevPageToken]] ) of playlist that matches args"
-        
-        COST = 1
-        self.quota -= COST
+        self.quota -= COSTS['list']
 
         if mine:
             request = self.token.playlists().list(
@@ -114,7 +112,7 @@ class API:
         *, position:Optional[int] = 0):
         "Adds a Video to the specified Playlist"
 
-        self.quota -= COSTS['playlist']['insert']
+        self.quota -= COSTS['insert']
 
         request = self.token.playlistItems().insert(
             part = "snippet",
@@ -138,7 +136,7 @@ class API:
         status: str = 'public'):
         "Creates a playlist, privacy defaults to public"
 
-        self.quota -= COSTS['playlists']['insert']
+        self.quota -= COSTS['insert']
 
         request = self.token.playlists().insert(
             part="snippet,status",
