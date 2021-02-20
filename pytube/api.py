@@ -85,7 +85,7 @@ class API:
         part: str = "snippet,contentDetails",
         maxResults: int = 25,
         pageToken: str = None) -> Dict:
-        "Returns tuple of ( list(items), [nextPageToken, [prevPageToken]] ) of playlist that matches args"
+        "Returns tuple of ( list(items), [nextPageToken, [prevPageToken]] ) of playlist that belong to a channel"
         self.quota -= COSTS['list']
 
         if mine:
@@ -106,7 +106,12 @@ class API:
         return {k:v for k,v in response.items() if k in ['items', 'nextPageToken', 'prevPageToken']}
 
 
-    def insert_playlist( self, 
+    def list_playlistitems(self, playlistId) -> List:
+        "Returns list of videos in a playlist"
+        ...
+
+
+    def insert_playlistitem( self, 
         playlistId:Optional[str], 
         videoId:Optional[str], 
         *, position:Optional[int] = 0):
@@ -129,6 +134,14 @@ class API:
         )
         response = request.execute()
         return response
+
+    def remove_playlistitem(self, playlistId: str, videoId: str):
+        "Removes video from sepcific playlist"
+        self.quota -= COSTS['delete']
+        #TODO Currently working on
+        request = self.token.playlistItems().delete(
+            id=playlistitem_id
+        )  
 
     def create_playlist(self, title: str, *,
         description: str = 'This is a playlist of songs posted in a Discord channel.',
@@ -156,17 +169,19 @@ class API:
         response = request.execute()
         return response
 
-    def update_playlist(self, title: str, *,
+    def update_playlist(self, id: str, *,
+        title: str = None, 
         description: str = None,
         tags: List = None,
         status: str = None):
-        "Creates a playlist, privacy defaults to public"
+        "Updates a playlist with provided args"
 
         self.quota -= COSTS['insert']
 
         request = self.token.playlists().update(
             part="snippet,status",
             body={
+                "id": id,
                 "snippet": {
                     "title": title,
                     "description": description,

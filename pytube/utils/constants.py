@@ -10,6 +10,7 @@ COSTS = {
     'list':1,
     'insert':50,
     'update':50,
+    'delete':50,
 }
 
 CHANNEL_RESOURCE_PROPERTIES = {

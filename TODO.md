@@ -9,6 +9,7 @@
 ## Future tasks
 
 - ~~Create dict of costs in constants.py costs->resource->action~~
+- Create method for subtracting Quota costs
 - Allow Statistics.subscriberCount to be larger than int (2^64)
 - Create variables.json for portability
-- Added maxResults and pageTokens to find_channels
+- Added maxResults and pageTokens to find_channels()
