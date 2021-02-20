@@ -7,8 +7,9 @@ API_VERSION = "v3"
 DEFAULT_QUOTA = 10000
 
 COSTS = {
-        'list':1,
-        'insert':50,
+    'list':1,
+    'insert':50,
+    'update':50,
 }
 
 CHANNEL_RESOURCE_PROPERTIES = {

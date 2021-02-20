@@ -155,3 +155,29 @@ class API:
 
         response = request.execute()
         return response
+
+    def update_playlist(self, title: str, *,
+        description: str = None,
+        tags: List = None,
+        status: str = None):
+        "Creates a playlist, privacy defaults to public"
+
+        self.quota -= COSTS['insert']
+
+        request = self.token.playlists().update(
+            part="snippet,status",
+            body={
+                "snippet": {
+                    "title": title,
+                    "description": description,
+                    "tags": tags,
+                    "defaultLanguage": "en"
+                },
+                "status": {
+                    "privacyStatus": status
+                }
+            }
+        )
+
+        response = request.execute()
+        return response
