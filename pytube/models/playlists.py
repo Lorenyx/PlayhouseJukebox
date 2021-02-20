@@ -1,33 +1,18 @@
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import ClassVar, Optional, Dict
 
-from .items import Localized, Snippet, Status, Content
-
-@dataclass
-class Playlist():
-    snippet: Optional[PlaylistSnippet] = field(default=None, repr=False)
-    status: Optional[PlaylistStatus] = field(default=None, repr=False)
-    content: Optional[PlaylistContent] = field(default=None, repr=False)
-    player: Optional[PlaylistPlayer] = field(default=None, repr=False)
-    localized: Optional[PlaylistLocalized] = field(default=None, repr=False)
-
+from .items import Base
 
 @dataclass
-class PlaylistSnippet(Snippet):
-    ...
+class Playlist(Base):
+    kind: ClassVar[str] = "youtube#playlist"
 
-@dataclass
-class PlaylistStatus(Status):
-    ...
+    id: Optional[str] = field(default=None, repr=False)
+    snippet: Optional[Dict] = field(default=None, repr=False)
+    contentDetails: Optional[Dict] = field(default=None, repr=False)
+    status: Optional[Dict] = field(default=None, repr=False)
+    localized: Optional[Dict] = field(default=None, repr=False)
+    player: Optional[dict] = field(default=None, repr=False)
 
-@dataclass
-class PlaylistContent(Content):
-    ...
-
-@dataclass
-class PlaylistLocalized(Localized):
-    ...
-    
-@dataclass
-class PlaylistPlayer():
-    ...
+    def __str__(self):
+        return f"{self.kind}(title={self.snippet['title']!r}, id={self.id})"
