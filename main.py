@@ -18,9 +18,9 @@ def main():
 
     response = request.execute()
     data = response['items'][0]
-    
-    channel = Channels.from_json(response)
-    print(channel)
+    channel = Channels.from_json(data)
+    snip = channel.snippet
+    print(type(snip))
     
 
 if __name__ == "__main__":

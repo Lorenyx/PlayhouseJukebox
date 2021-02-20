@@ -36,6 +36,17 @@ class Channels(Base):
     status: Optional[Status] = field(default=None, repr=False)
     branding: Optional[ChannelsBranding] = field(default=None, repr=False)
     localized: Optional[Localized] = field(default=None, repr=False)
+
     
     def __str__(self):
-        return f"Channel(title={self.snippet.title}, channelId={self.snippet.channelId}"
+        return f"Channel(snippet={self.snippet}, content={self.content})"
+
+
+    @staticmethod
+    def from_response(self, response):
+        "Returns Channels obj from a GET json body"
+        # Makes sure that provided data has
+        if response['kind'] != 'youtube#channelListResponse':
+            return None 
+
+        
