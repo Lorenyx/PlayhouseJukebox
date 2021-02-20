@@ -40,12 +40,11 @@ class API:
             API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
 
-
-    def query_channel(self, *, 
+    def list_channel(self, *, 
         id: str = None,
         forUsername: str = None,
         mine: bool = None,
-        part: str = "snippet,contentDetails,statistics") -> List:
+        part: str = "snippet,contentDetails,statistics" ) -> List:
         "Returns list of Channels that matches args"
 
         COST = 1 # Cost to make channel list request
