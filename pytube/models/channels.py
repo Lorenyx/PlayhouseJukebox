@@ -1,16 +1,14 @@
 from dataclasses import dataclass, field
-from typing import ClassVar, Optional, Union, Dict, List
+from typing import ClassVar, Optional, Dict
 
-from .items import Localized, Snippet, Status, Content, Base
+from .items import Base
 
  
 @dataclass
 class Channels(Base):
-    # Optimizes code, only values in slots are allowed to be fields
-    __slots__ = ['snippet', 'contentDetails', 'statistics', 'topic', 'status', 'branding', 'localized',]
-
     kind: ClassVar[str] = "youtube#channel"
 
+    id: Optional[str] = field(default=None, repr=False)
     snippet: Optional[Dict] = field(default=None, repr=False)
     contentDetails: Optional[Dict] = field(default=None, repr=False)
     statistics: Optional[Dict] = field(default=None, repr=False)
@@ -20,4 +18,5 @@ class Channels(Base):
     localized: Optional[Dict] = field(default=None, repr=False)
 
     def __str__(self):
-        return f"Channel(snippet={type(self.snippet)}, content={type(self.contentDetails)})"
+        return f"{self.kind}(title={self.snippet['title']:!r}, id={self.id})"
+

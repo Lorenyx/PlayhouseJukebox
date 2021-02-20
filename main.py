@@ -1,5 +1,4 @@
 import os
-from pytube.models.items import Snippet
 from dotenv import load_dotenv
 
 from pytube.models.channels import Channels
