@@ -236,7 +236,7 @@ class API:
         position: int = 0 ):
         "Inserts a playlist (sourceId) into another playlist (playlistId), max=25"
         self.quota -= COSTS['list']
-        #TODO insert playlist into playlist
+        #TODO Needs testing
         pyiter = self.list_playlistitems(sourceId)
         videoIds = pyiter.to_id_list()
         for videoId in videoIds:
@@ -249,9 +249,7 @@ class API:
     @staticmethod
     def parse_url(url: str):
         "Takes a youtube link and returns the ID"
-        #TODO parse URLS
         schema = urlparse(url)
-
         if schema.netloc == 'youtu.be': # For shortened URLs
             return schema.path[1:] # [1:] removes '/' from path
         query = parse_qs(schema.query)
