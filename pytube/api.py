@@ -4,8 +4,9 @@ import googleapiclient.errors
 
 from dataclasses import InitVar, dataclass
 from typing import ClassVar, Optional, List, Dict
+from urllib import urlparse, parse_qs
 
-from .utils.constants import API_SERVICE_NAME, API_VERSION, DEFAULT_QUOTA, COSTS
+from .utils.constants import API_SERVICE_NAME, API_VERSION, DEFAULT_QUOTA, COSTS, EXIT_CODES
 from .utils.pytube_iter import PytubeIter
 from .models.channels import Channels
 
@@ -233,24 +234,27 @@ class API:
 
     def insert_playlist(self, playlistId: str, sourceId: str, *,
         position: int = 0 ):
-        "Inserts a playlist (sourceId) into another playlist (playlistId)"
-        # self.quota -= COSTS['insert']
+        "Inserts a playlist (sourceId) into another playlist (playlistId), max=25"
+        self.quota -= COSTS['list']
         #TODO insert playlist into playlist
         pyiter = self.list_playlistitems(sourceId)
         videoIds = pyiter.to_id_list()
         for videoId in videoIds:
             self.insert_playlistitem(playlistId, videoId)
+            self.quota -= COSTS['insert']
 
-        return 0
+        return 0 # Successful exit code
 
 
     @staticmethod
     def parse_url(url: str):
         "Takes a youtube link and returns the ID"
         #TODO parse URLS
-        # https://www.youtube.com/watch?v=KoU-s08g5Hc
-        # https://youtu.be/KoU-s08g5Hc
-        # https://youtu.be/KoU-s08g5Hc?t=55
-        # https://www.youtube.com/playlist?list=PLY0iZoD0iOqou8YGz9uaLzHlgdGbL9-El
-        # https://www.youtube.com/watch?v=0OmfowGG-AM&list=PLY0iZoD0iOqou8YGz9uaLzHlgdGbL9-El&index=2
-        ...
+        schema = urlparse(url)
+
+        if schema.netloc == 'youtu.be': # For shortened URLs
+            return schema.path[1:] # [1:] removes '/' from path
+        query = parse_qs(schema.query)
+        if 'v' in query:
+            return query['v'][0]
+        return query['list'][0]
