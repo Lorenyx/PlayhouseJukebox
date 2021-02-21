@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
 from typing import ClassVar, Optional, List, Dict
+from pytube.models.items import Base 
 
 
 @dataclass
-class PytubeIter(iter):
+class PytubeIter(Base):
     "An Iterable of videos within a playlist or playlists within a channel"
-    kind: ClassVar[List] = ["youtube#playlistItemListResponse", "youtube#playlistListResponse"]
+    kind: Optional[str] = field(default=None)
 
     items: Optional[List] = field(default=None)
     nextPageToken: Optional[str] = field(default=None, repr=False)
@@ -14,22 +15,20 @@ class PytubeIter(iter):
     items: Optional[List] = field(default=None, repr=False)
 
     def __str__(self):
-        return f"{self.kind}[{self.items}]"
-    
+        return f"{self.kind}[items={len(self.items)}]"
 
     def __iter__(self):
-        return self
-
-
-    def __next__(self):
-        "Returns next item in Iter"
+        "Returns generator object for yielding"
         index = 0
-        while index < self.pageInfo['maxResults']:
+        while index < self.pageInfo['resultsPerPage']:
             try:
                 yield self.items[index]
                 index+=1
             except IndexError:
                 break
-        if self.nextPageToken:
+        yield None
 
 
+    def to_id_list(self):
+        it = iter(self)
+        return [item['id'] for item in it]

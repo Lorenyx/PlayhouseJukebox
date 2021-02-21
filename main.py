@@ -18,8 +18,12 @@ def main():
     # response = request.execute()
     # data = response['items'][0]
     # channel = Channels.from_response(data)
-    # PlaylistId= PLwJ3OK9IWOt5F18lWIGme-Acq0wiDkSks
-    print(youtube.insert_playlist('PLwJ3OK9IWOt5F18lWIGme-Acq0wiDkSks','dQw4w9WgXcQ'))
+    # PlistId = PLwJ3OK9IWOt5F18lWIGme-Acq0wiDkSks
+    # VideoId = dQw4w9WgXcQ
+    # NynanPlist = PLY0iZoD0iOqou8YGz9uaLzHlgdGbL9-El
+    tmp = youtube.insert_playlist('PLwJ3OK9IWOt5F18lWIGme-Acq0wiDkSks', 'PLY0iZoD0iOqou8YGz9uaLzHlgdGbL9-El')
+    print(tmp)
+
     
 
 if __name__ == "__main__":

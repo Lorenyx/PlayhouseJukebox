@@ -13,6 +13,10 @@ COSTS = {
     'delete':50,
 }
 
+EXIT_CODES = {
+    0: 'Success',
+}
+
 CHANNEL_RESOURCE_PROPERTIES = {
     "id",
     "brandingSettings",

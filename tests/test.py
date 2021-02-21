@@ -1,3 +1,13 @@
-dc = {'name': 12, 'age': 45, 'height':69}
+def fun():
+    num = 0
+    while True:
+        if num > 10:
+            return
+        yield num
+        num+=2
 
-print([x for x in dc.items() if x in ['name', 'age']])
+
+
+it = fun()
+
+print([i for i in it])
