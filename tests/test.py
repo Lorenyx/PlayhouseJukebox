@@ -16,6 +16,7 @@ def parse_url(url: str):
         
 
 urls = [ 
+    'hello world',
     'https://www.youtube.com/watch?v=KoU-s08g5Hc',
     'https://www.youtube.com/watch?v=KoU-s08g5Hc',
     'https://youtu.be/KoU-s08g5Hc',
@@ -27,6 +28,4 @@ urls = [
 ]
 
 for url in urls:
-    print(parse_url(url))
-    # scheme = urlparse(url)
-    # print(parse_qs(scheme.query))
+    print(urlparse(url))

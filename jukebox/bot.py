@@ -1,19 +1,46 @@
 import discord
+import os
 
-class MyClient(discord.Client):
-    async def on_ready(self):
-        print('Logged in as')
-        print(self.user.name)
-        print(self.user.id)
-        print('------')
+from discord.ext import tasks, commands
+from dotenv import load_dotenv
 
-    async def on_message(self, message):
-        # we do not want the bot to reply to itself
-        if message.author.id == self.user.id:
-            return
+load_dotenv()
 
-        if message.content.startswith('!hello'):
-            await message.reply('Hello!', mention_author=True)
+description = '''A self-hosted discord bot for making a
+YouTube playlist with songs provided by your server members.'''
 
-client = MyClient()
-client.run('token')
+INTENTS = discord.Intents.none()
+INTENTS.messages = True
+INTENTS.guilds = True
+
+PREFIX='j?'
+TOKEN=os.getenv('DISCORD_SECRET')
+
+bot = commands.Bot(command_prefix=PREFIX, description=description, intents=INTENTS)
+
+@bot.event
+async def on_ready():
+    print('Logged in as')
+    print(bot.user.name)
+    print(bot.user.id)
+    print('------')
+    slow_count.start()
+
+
+@bot.command()
+async def ping(ctx):
+    """Adds two numbers together."""
+    await ctx.message.reply('pong')
+
+
+@tasks.loop(seconds=5.0, count=5)
+async def slow_count():
+    print(slow_count.current_loop)
+
+@slow_count.after_loop
+async def after_slow_count():
+    print('done!')
+
+
+
+bot.run(TOKEN)
